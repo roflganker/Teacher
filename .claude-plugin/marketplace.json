@@ -1,12 +1,12 @@
 {
-  "name": "teacher",
+  "name": "claude-teacher",
   "owner": { "name": "roflganker" },
   "description": "Claude Code plugin marketplace for the Teacher project.",
   "plugins": [
     {
-      "name": "meoty",
-      "source": "./plugins/meoty",
-      "description": "Meoty tooling for Claude Code."
+      "name": "claude-teacher",
+      "source": "./plugins/claude-teacher",
+      "description": "Teacher tooling for Claude Code."
     }
   ]
 }

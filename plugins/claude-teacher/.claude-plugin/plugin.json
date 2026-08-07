@@ -1,0 +1,8 @@
+{
+  "name": "claude-teacher",
+  "version": "0.1.0",
+  "description": "Teacher tooling for Claude Code.",
+  "author": {
+    "name": "roflganker"
+  }
+}
