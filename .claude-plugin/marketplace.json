@@ -1,12 +1,12 @@
 {
   "name": "claude-teacher",
   "owner": { "name": "roflganker" },
-  "description": "Claude Code plugin marketplace for the Teacher project.",
+  "description": "Plugins that teach Claude to build the pieces a Claude Code harness is made of.",
   "plugins": [
     {
       "name": "claude-teacher",
       "source": "./plugins/claude-teacher",
-      "description": "Teacher tooling for Claude Code."
+      "description": "Teaches Claude to author Agent Skills, and reviews them against that doctrine."
     }
   ]
 }

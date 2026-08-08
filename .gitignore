@@ -1,3 +1,6 @@
 .DS_Store
 .env
 *.local
+
+# Source material the skill was distilled from. Kept locally, not shipped.
+knowledge/
