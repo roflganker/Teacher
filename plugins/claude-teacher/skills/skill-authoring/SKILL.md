@@ -17,7 +17,8 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 
 | At | Read | For |
 | :--- | :--- | :--- |
-| step 3 | `${CLAUDE_PLUGIN_ROOT}/doctrine/frontmatter.md` | placement, fields, and what the runtime enforces for you |
+| step 1 | `${CLAUDE_PLUGIN_ROOT}/doctrine/frontmatter.md`, its *Placement* section | the surfaces the admission test is judged against |
+| step 3 | `${CLAUDE_PLUGIN_ROOT}/doctrine/frontmatter.md`, the rest | the fields, and what the runtime enforces for you |
 | step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/laws.md` | the laws every line of the draft answers to |
 | step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/body.md` | how each part of the body is shaped |
 | step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/scripts.md` | only if it bundles a script |
@@ -25,9 +26,9 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 **Every step is a gate.** A failed step stops the run; say where and why.
 
 ```
-- [ ] 1. Admit it — is this a skill at all, and one coherent unit?
+- [ ] 1. Admit it — placement declared; is this a skill at all, and one coherent unit there?
 - [ ] 2. Classify the archetype, and take its anatomy
-- [ ] 3. Place it, and pick the frontmatter that does the work
+- [ ] 3. Configure — pick the frontmatter that does the work
 - [ ] 4. Author it
 - [ ] 5. Validate  (scripts/validate.py)
 - [ ] 6. Review    (3 reviewer subagents in parallel → adjudicate → fix; cap 2 rounds)
@@ -36,26 +37,21 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 
 ## Steps
 
-**1. Admit it.** Run the admission test in `doctrine/archetypes.md`. A skill that fails it is not
-made good by better writing — say so and stop. If the operator wants it anyway, that is their call:
-say what fails and build it.
+**1. Admit it.** Declare where the skill will install — personal, project, or plugin — then run the
+admission test in `doctrine/archetypes.md` against that placement's surfaces. A skill that fails it:
+say what fails and stop. If the operator wants it anyway, that is their call: build it. Where the
+rejection table routes the content to `.claude/rules/`, hand it to the `rule-authoring` skill.
 
-**2. Classify.** Pick exactly one archetype and take its required anatomy verbatim. A skill needing
-two archetypes is two skills; a skill matching none is usually a fact or a standing rule belonging in
-the consuming project's own instructions and rules, not a skill.
+**2. Classify.** Pick the archetype per `doctrine/archetypes.md` and take its required anatomy.
 
-**3. Place and configure.** Where it installs — personal, project, or plugin — decides which
-frontmatter fields exist and who can reach it. Then choose fields by what each one *does*, per
-`doctrine/frontmatter.md`. A field the runtime enforces beats a sentence in the body asking for the
-same thing, every time.
+**3. Configure.** The placement declared at step 1 decides which frontmatter fields exist and who
+can reach the skill. Choose fields by what each one *does*, per `doctrine/frontmatter.md`.
 
 **4. Author.** Obey `doctrine/laws.md` and the archetype's anatomy.
 
-**5. Validate.** `python3 ${CLAUDE_SKILL_DIR}/scripts/validate.py <skill-dir>` — it catches the
-mechanical failures that are invisible by inspection, chiefly frontmatter that does not parse, which
-disables a skill **silently**. Add `--portable` when the skill must also load on claude.ai or
-through the Skills API, where a Claude Code field is a hard error rather than an ignored key. Fix
-every error before step 6. Judge each warning; a warning you overrule, say why.
+**5. Validate.** `python3 ${CLAUDE_SKILL_DIR}/scripts/validate.py <skill-dir>`, with `--portable`
+for a skill that must also load on claude.ai or through the Skills API. Fix every error before
+step 6. Judge each warning; a warning you overrule, say why.
 
 **6. Review.** Spawn the three reviewer subagents **in parallel, in one message**. Each owns one
 activity and an exclusive set of finding axes — none covers another's ground:
@@ -63,12 +59,14 @@ activity and an exclusive set of finding axes — none covers another's ground:
 | Subagent | Activity | Axes it emits |
 | :--- | :--- | :--- |
 | `claude-teacher:skill-walker` | carries the skill's job end to end as a caller | `fitness` |
-| `claude-teacher:skill-fact-checker` | verifies every stated fact against something real, holds each to the fact-admission test | `grounding`, `volatility` |
+| `claude-teacher:skill-fact-checker` | verifies every stated fact against something real, holds each to the fact-admission test | `grounding`, `volatility`, `ownership` |
 | `claude-teacher:skill-conformance-reviewer` | reads the skill as a text against the doctrine | `admission`, `anatomy`, `description`, `boundary`, `bundling`, `economy`, `form`, `ambiguity` |
 
-Pass each exactly one thing: the path of the skill under review. They find the doctrine themselves, at a location nothing in your prompt can move. Do
-not pass the skill's text, your reasoning, or what you intended; each reads the files itself, and
-telling a reviewer your intent is what makes it agree with you.
+Pass each exactly two things: the path of the skill under review, and the archetype chosen at
+step 2. Classification is the author's call and part of the record under review — no reviewer
+re-makes it or reports on it. They find the doctrine themselves, at a location nothing in your
+prompt can move. Do not pass the skill's text, your reasoning, or what you intended; each reads
+the files itself, and telling a reviewer your intent is what makes it agree with you.
 
 Each answers `OK`, or a numbered list of claimed divergences with `file:line` and evidence. Merge
 the lists; a defect reported by more than one reviewer is adjudicated once.
@@ -88,9 +86,12 @@ what you did with each finding, and — if it landed in a plugin — that the pl
 needs bumping for the change to reach anyone who installed it.
 
 **Revising an existing skill** runs the same steps, with step 1 asking whether it still passes
-admission rather than whether it should exist. Two signals from watching it in use outrank another
-reading: a reference file opened on every run belongs in `SKILL.md`, and one never opened is either
-unnecessary or badly signposted. Removal is the usual outcome of both.
+admission rather than whether it should exist — and with the usage signals in
+`doctrine/archetypes.md`, *Bundled files*, weighed before another reading.
+
+**Judging a skill without a mandate to change it** runs steps 1, 2, 5 and 6 with every fix replaced
+by reporting: findings are adjudicated as usual, then reported rather than applied, and nothing in
+the skill's directory is written.
 
 ## Rules
 

@@ -21,7 +21,7 @@ plugins/claude-teacher/
   skills/skill-authoring/scripts/validate.py   mechanical checks
   skills/rule-authoring/SKILL.md         stub — says so, and says what not to assume
   agents/skill-walker.md                 read-only reviewer: walks the skill as a caller (fitness)
-  agents/skill-fact-checker.md           read-only reviewer: verifies facts (grounding, volatility)
+  agents/skill-fact-checker.md           read-only reviewer: verifies facts (grounding, volatility, ownership)
   agents/skill-conformance-reviewer.md   read-only reviewer: reads the text against the doctrine
 knowledge/                               gitignored source material; not shipped
 ```
@@ -53,8 +53,9 @@ Consequences that constrain edits:
   reviewers is a seam both will assume the other holds.
 
 The `skill-authoring` → reviewers hand-off is deliberately narrow: the author passes each reviewer
-**only a path**. Passing the draft's text or the intent behind it is what makes a reviewer agree
-with the author, so it is prohibited rather than discouraged.
+**only the skill's path and its declared archetype** — classification is the author's job, and no
+reviewer re-makes it. Passing the draft's text or the intent behind it is what makes a reviewer
+agree with the author, so it is prohibited rather than discouraged.
 
 ## Engineering principles
 

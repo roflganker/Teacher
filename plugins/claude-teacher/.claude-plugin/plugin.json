@@ -1,6 +1,6 @@
 {
   "name": "claude-teacher",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Teaches Claude to author Agent Skills, and reviews them against that doctrine.",
   "author": {
     "name": "roflganker"
