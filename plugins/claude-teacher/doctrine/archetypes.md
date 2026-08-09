@@ -10,6 +10,10 @@
 A skill earns its place only if all four hold. Any one failing means the content belongs somewhere
 else, and no amount of rewriting changes that.
 
+Admission is judged against a **declared placement** — personal, project, or plugin — because
+placement fixes which siblings surround the skill and which facts are its own to carry
+(`frontmatter.md`, placement). Declare it before testing; the fourth test cannot run without it.
+
 1. **The agent gets it wrong without it.** Run the task without the skill first, at least in your
    head and preferably for real. If the unaided attempt is fine, the skill adds cost and no capability.
 2. **It is a procedure or a body of situated knowledge, not a fact.** A fact every session needs is
@@ -22,7 +26,13 @@ else, and no amount of rewriting changes that.
    it belongs in `.claude/rules/`. Skills do a job; they are not where a line is held.
 4. **It is one coherent unit.** Scope it like a function. Too narrow and several skills must load to
    do one job, each contradicting the others at the seams. Too broad and it cannot be triggered
-   precisely, so it fires on the wrong tasks and gets ignored on the right ones.
+   precisely, so it fires on the wrong tasks and gets ignored on the right ones. And the boundary is
+   drawn within the surrounding set the placement fixes, not in a vacuum: a job or body of knowledge
+   an installed sibling already owns is not this skill's to take. Extend the owner, or route to it by
+   name — a second owner is a seam nothing arbitrates, because skills loaded together share one
+   scope and the runtime does not rank them (`frontmatter.md`, traps). Where the placement makes
+   the surrounding set unenumerable, the test cannot run — `frontmatter.md` states what the
+   operator gets instead.
 
 Where rejected content goes:
 
@@ -33,6 +43,7 @@ Where rejected content goes:
 | 3 — a tool can reject it | a linter rule, a schema, or a hook |
 | 3 — it is a rule to hold, not a job to do | `.claude/rules/` — the `rule-authoring` skill |
 | 4 — it is two jobs | two skills |
+| 4 — an installed sibling owns it | that sibling, extended — or a referral to it by name |
 
 **The generated-skill trap.** A skill produced from an LLM's own priors with no grounding in real
 material can only restate what the model already knows — which is by construction the content that
@@ -161,3 +172,6 @@ and data. Only `SKILL.md` is required; the rest are conventions.
 - **A prewritten script beats generated code**: its source never enters context, only its output.
   State whether the agent should *run* it or *read* it.
 - **A bundled file nothing points at is dead weight.** Delete it or reference it.
+- **Watching the skill in use outranks re-reading it.** A reference file opened on every run
+  belongs in `SKILL.md`; one never opened is unnecessary or badly signposted. Removal is the usual
+  outcome of both.

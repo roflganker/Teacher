@@ -22,7 +22,18 @@ Precedence on a name collision is enterprise, then personal, then project; any o
 bundled skill of the same name. Plugin skills are namespaced `plugin-name:skill-name` and cannot
 collide — which is also why a cross-skill grant must be written namespaced.
 
-Two consequences worth designing around:
+Placement is not an install-time detail — it is declared before admission, because it fixes the two
+surfaces every later decision is judged against: **which siblings surround the skill**, whose owned
+jobs and knowledge are not this skill's to take (`archetypes.md`, admission), and **which facts are
+its own to carry** (`body.md`, *Where a fact goes*).
+
+| Placement | The surrounding siblings | The facts that are its own |
+| :--- | :--- | :--- |
+| **Project** | the project's own skills plus every plugin the project installs — an enumerable set, so enumerate it before claiming a job | the project's stable facts |
+| **Plugin** | inside the plugin, its own components, sharing through the plugin root; outside, the consumer's installed set, unknowable at authoring time — so the ownership boundary is carried entirely by the name, the description, and namespaced grants | its own domain — the thing it drives or teaches — and no project's |
+| **Personal** | every project the operator opens — unenumerable, so the overlap test cannot run and no rule stands in for it. What the operator gets instead is the mechanism: precedence makes a personal skill *shadow* a project skill of the same name, in every repository, silently — a risk only they can weigh | the operator's own environment — machine, accounts, where credentials live. A personal skill built on one project's facts is misplaced rather than wrong: the fix is moving it into that project |
+
+Two more consequences worth designing around:
 
 - **A plugin skill is a product used inside someone else's repository.** It may not hardcode a branch
   name, a host, a layout rule, or a domain value. Anything project-specific is read at runtime from

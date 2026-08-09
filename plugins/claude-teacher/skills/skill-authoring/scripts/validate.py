@@ -14,7 +14,7 @@ here. They belong to the reviewer.
 --portable restricts frontmatter to the six fields claude.ai uploads and the Skills API
 accept; every other key is a hard error on those paths rather than a warning.
 
-Exit status is 1 if any ERROR was reported, else 0.
+Exit status: 0 clean or warnings only, 1 any ERROR, 2 bad usage.
 """
 
 import os
@@ -26,8 +26,9 @@ import sys
 KNOWN_FIELDS = {
     "name", "description", "when_to_use", "argument-hint", "arguments",
     "disable-model-invocation", "user-invocable", "allowed-tools", "disallowed-tools",
+    "disallowedTools",  # camelCase alias the runtime reads alongside the hyphenated form
     "model", "effort", "context", "agent", "background", "hooks", "paths", "shell",
-    "metadata", "license", "compatibility",
+    "metadata", "license", "compatibility", "version",
 }
 
 # The portable subset. Anything else is a hard error on claude.ai / the Skills API.
@@ -373,7 +374,22 @@ def check_bundle(skill_dir, skill_md):
                           "long reference hides the rest of its scope" % total)
 
 
+HELP = """\
+usage: validate.py <skill-dir> [--portable]
+
+Mechanical checks for an Agent Skill directory. ERROR lines are defects; WARN lines need judgement.
+
+  --portable   restrict frontmatter to the six fields claude.ai and the Skills API accept;
+               any other field is reported as an ERROR rather than a WARN
+
+Exit status: 0 clean or warnings only, 1 any ERROR, 2 bad usage.
+"""
+
+
 def main(argv):
+    if "--help" in argv[1:] or "-h" in argv[1:]:
+        print(HELP, end="")
+        return 0
     args = [a for a in argv[1:] if not a.startswith("--")]
     flags = {a for a in argv[1:] if a.startswith("--")}
     unknown = flags - {"--portable"}
