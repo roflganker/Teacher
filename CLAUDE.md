@@ -16,7 +16,7 @@ skill with its own doctrine, not as a section inside skill authoring.
 plugins/claude-teacher/
   .claude-plugin/plugin.json             plugin manifest — holds `version`
   doctrine/                              the normative text; the plugin's shared core
-    laws.md  archetypes.md  frontmatter.md  body.md  scripts.md  reviewing.md
+    laws.md  archetypes.md  frontmatter.md  body.md  scripts.md
   skills/skill-authoring/SKILL.md        the procedure that applies the doctrine
   skills/skill-authoring/scripts/validate.py   mechanical checks
   skills/rule-authoring/SKILL.md         stub — says so, and says what not to assume
@@ -29,26 +29,28 @@ knowledge/                               gitignored source material; not shipped
 ## The architecture, and why it is this shape
 
 **One text, many readers.** `doctrine/` is the single source of every rule about how a skill is
-written, plus `reviewing.md`, the contract for how a review is conducted. `skills/skill-authoring`
-writes against it; the three reviewer agents review against it, in parallel, each owning one
-activity and an exclusive set of finding axes (the table in `reviewing.md`). All reach it as
+written. `skills/skill-authoring` writes against it; the three reviewer agents review against it,
+in parallel, each owning one activity and an exclusive set of finding axes. All reach it as
 `${CLAUDE_PLUGIN_ROOT}/doctrine/…`, so there is one copy and nothing to drift. Each reviewer
-re-reads its subset every run and deliberately states no rule of its own.
+re-reads its subset every run and deliberately states no rule about skills of its own — an agent
+body carries only its activity, its doctrine subset, its axes, and the protocol it runs under.
+How the review is *orchestrated* — who is spawned, what they are passed, how findings are
+adjudicated — is meta the reviewers never read: it lives in `skill-authoring`'s step 6 for the
+runtime and in `README.md` for people.
 
 Consequences that constrain edits:
 
 - **A rule goes in `doctrine/`, never in `SKILL.md` or an agent prompt.** `skill-authoring` is a
-  procedure and states no rule about the skill being authored; a reviewer states no rule at all —
-  its prompt names only its activity, its doctrine subset, and its axes. A rule written in either
-  is a rule nothing enforces.
+  procedure and states no rule about the skill being authored; a reviewer states no rule about
+  skills at all. A rule written in either is a rule nothing enforces.
 - **A change in behaviour is a doctrine edit.** Changing what is required of skills means editing
   `doctrine/`; every reader picks it up with no other change.
 - **Mechanical vs. judgement is a hard split.** Anything a script can decide (YAML parsing, field
   sets, dangling bundled files) belongs in `validate.py`; anything it cannot belongs to the
   reviewers. Neither duplicates the other.
-- **Axes are exclusively owned.** Each finding axis belongs to exactly one reviewer, assigned in
-  `reviewing.md`. A defect class covered by two reviewers is a seam both will assume the other
-  holds.
+- **Axes are exclusively owned.** Each finding axis belongs to exactly one reviewer, stated in
+  that agent's own body and documented in `README.md`. A defect class covered by two reviewers is
+  a seam both will assume the other holds.
 
 The `skill-authoring` → reviewers hand-off is deliberately narrow: the author passes each reviewer
 **only a path**. Passing the draft's text or the intent behind it is what makes a reviewer agree
