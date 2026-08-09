@@ -35,8 +35,8 @@ in parallel, each owning one activity and an exclusive set of finding axes. All 
 re-reads its subset every run and deliberately states no rule about skills of its own — an agent
 body carries only its activity, its doctrine subset, its axes, and the protocol it runs under.
 How the review is *orchestrated* — who is spawned, what they are passed, how findings are
-adjudicated — is meta the reviewers never read: it lives in `skill-authoring`'s step 6 for the
-runtime and in `README.md` for people.
+adjudicated — is meta the reviewers never read: it lives in `skill-authoring`'s step 6 and
+nowhere else.
 
 Consequences that constrain edits:
 
@@ -49,8 +49,8 @@ Consequences that constrain edits:
   sets, dangling bundled files) belongs in `validate.py`; anything it cannot belongs to the
   reviewers. Neither duplicates the other.
 - **Axes are exclusively owned.** Each finding axis belongs to exactly one reviewer, stated in
-  that agent's own body and documented in `README.md`. A defect class covered by two reviewers is
-  a seam both will assume the other holds.
+  that agent's own body and in `skill-authoring`'s step 6 table. A defect class covered by two
+  reviewers is a seam both will assume the other holds.
 
 The `skill-authoring` → reviewers hand-off is deliberately narrow: the author passes each reviewer
 **only a path**. Passing the draft's text or the intent behind it is what makes a reviewer agree

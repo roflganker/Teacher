@@ -13,7 +13,7 @@ never saw your intent.
 | Component | What it does |
 | :--- | :--- |
 | `skill-authoring` skill | The procedure: admit → classify → place → author → validate → review → report. Every step is a gate; a failed step stops the run and says why. |
-| Three reviewer agents | Read-only, run in parallel, each one activity with its own axes — see [The review](#the-review). Each re-reads the doctrine every run and answers with proven divergences (`file:line` + evidence) or exactly `OK`. |
+| Three reviewer agents | Read-only, run in parallel: one walks the skill end to end as a caller, one verifies its facts against something real, one reads it as a text against the doctrine. Each re-reads the doctrine every run and answers with proven divergences (`file:line` + evidence) or exactly `OK`. |
 | `doctrine/` | The normative text all of them read — laws, archetypes, frontmatter, body, scripts. One copy, many readers, nothing to drift. |
 | `validate.py` | Mechanical checks the eye misses — chiefly frontmatter that does not parse, which disables a skill *silently*. `--portable` mode restricts fields to what claude.ai and the Skills API accept. |
 | `rule-authoring` skill | A declared stub for `.claude/rules/` authoring. It exists to say the doctrine is not written yet and to stop skill doctrine being borrowed for a job it does not fit. |
@@ -45,26 +45,6 @@ files — it is confidently formatted skills that make the agent worse:
 It is also stricter about deletion than any generator is willing to be. Revising a skill removes
 more often than it adds, and the review flags over-trimming too — a bare imperative whose reason
 was cut is a defect in the same way padding is.
-
-## The review
-
-The review step of `skill-authoring` spawns three reviewer agents **in parallel**, each invoked by
-its namespaced name and passed exactly one thing — the path of the skill under review. Not the
-draft's text, not the reasoning, not the intent. Each agent's body is self-contained: its
-activity, the doctrine files it judges against, and the finding axes it may emit.
-
-| Agent | Activity | Axes |
-| :--- | :--- | :--- |
-| `claude-teacher:skill-walker` | carries the skill's job end to end as a caller, running or tracing each invocation | `fitness` |
-| `claude-teacher:skill-fact-checker` | verifies every stated fact against something real, and holds each to the doctrine's fact-admission test | `grounding`, `volatility` |
-| `claude-teacher:skill-conformance-reviewer` | reads the skill as a text against the doctrine | `admission`, `anatomy`, `description`, `boundary`, `bundling`, `economy`, `form`, `ambiguity` |
-
-The axes are exclusive — each defect class is owned by exactly one reviewer, so a reviewer stays
-silent on defects outside its set rather than half-covering a sibling's ground. Each answers `OK`
-or a numbered list of proven divergences. The main agent merges the lists and adjudicates every
-finding by opening the cited line itself: a defect reported by more than one reviewer is
-adjudicated once, a discarded finding gets a stated reason, and what survives gets fixed before
-all three are re-spawned — capped at two rounds total.
 
 ## Install
 
