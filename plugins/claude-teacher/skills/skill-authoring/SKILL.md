@@ -57,10 +57,16 @@ disables a skill **silently**. Add `--portable` when the skill must also load on
 through the Skills API, where a Claude Code field is a hard error rather than an ignored key. Fix
 every error before step 6. Judge each warning; a warning you overrule, say why.
 
-**6. Review.** Spawn the three reviewer subagents **in parallel, in one message**:
-`claude-teacher:skill-walker`, `claude-teacher:skill-fact-checker`, and
-`claude-teacher:skill-conformance-reviewer`. Pass each exactly one thing: the path of the skill
-under review. They find the doctrine themselves, at a location nothing in your prompt can move. Do
+**6. Review.** Spawn the three reviewer subagents **in parallel, in one message**. Each owns one
+activity and an exclusive set of finding axes — none covers another's ground:
+
+| Subagent | Activity | Axes it emits |
+| :--- | :--- | :--- |
+| `claude-teacher:skill-walker` | carries the skill's job end to end as a caller | `fitness` |
+| `claude-teacher:skill-fact-checker` | verifies every stated fact against something real, holds each to the fact-admission test | `grounding`, `volatility` |
+| `claude-teacher:skill-conformance-reviewer` | reads the skill as a text against the doctrine | `admission`, `anatomy`, `description`, `boundary`, `bundling`, `economy`, `form`, `ambiguity` |
+
+Pass each exactly one thing: the path of the skill under review. They find the doctrine themselves, at a location nothing in your prompt can move. Do
 not pass the skill's text, your reasoning, or what you intended; each reads the files itself, and
 telling a reviewer your intent is what makes it agree with you.
 
