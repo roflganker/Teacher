@@ -161,6 +161,11 @@ flag", "that document is not served anywhere". It needs the same grounding befor
 on it, because what gets built on an unverified absence is a workaround: a scraper, a snapshot, a
 hardcoded copy of something the system would have answered for itself.
 
+**Grounding is judged when the skill is written, and the body is read long after.** A fact can be
+true the day it is carried and false within the month, with nothing in the text to show it. So a
+claim being real is necessary and not sufficient: whether a true fact may be carried at all turns
+on its stability, and `body.md` states that test under *Where a fact goes*.
+
 The same test applies to the skill as a whole. **What it teaches must come from something that
 actually happened** — a task run, a correction made, a real config or spec read, a real incident.
 Content generated from priors alone can only restate what the agent already knows, which is by

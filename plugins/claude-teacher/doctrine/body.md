@@ -29,16 +29,29 @@ refuses an obvious adaptation (too tight).
 
 ## Where a fact goes
 
-Progressive disclosure has one exception, and it is the highest-value content most skills carry.
+Two questions admit a fact to the body, asked in order: **could a competent agent derive it, and
+will it still be true when it is read?** The first is the frontier test, already stated in
+`laws.md` and not repeated here. The second exists because a body outlives its writing: a skill
+has no release cycle, and a fact baked into one reads exactly as confident after it has become
+false.
 
-**A correction the agent needs *before* it meets the situation belongs in `SKILL.md`, not in
-`references/`.** It cannot recognize the trigger to open a file about a hazard it does not yet know
-exists. Rows that are soft-deleted so every query needs a predicate; an identifier that changes name
-across three services; a health check that stays green while the database is down — those stay
-inline even though they read as reference material.
+| The fact is | Verdict |
+| :--- | :--- |
+| **Stable and underivable** — which host serves the dashboards, that there are two clusters and what they are called, the auth envelope every internal API shares | Carry it inline. This is load-bearing content: nothing else would tell the agent, and it saves a discovery pass on every run. Only a skill that lives with the project it describes may do this — a skill shipped into other people's repositories has no stable project facts, only lookups (`frontmatter.md`, placement). |
+| **Volatile, and the procedure does not turn on it** — a database schema, a generated API spec, the current module layout, a chart's structure | Never carry it; carry the lookup. State where the live answer is — the file, the command, the endpoint — and let the agent read it at runtime. A snapshot decays silently while still reading as authoritative, which makes it worse than absence. |
+| **Volatile, but the procedure turns on it** — the two cluster names a deploy sequence branches on, the queue names a drain order depends on | Carry it, paired with its check — the command or observable that re-derives it. A fact the flow depends on cannot wait for discovery; what it can do is say how to confirm it still holds, so drift surfaces as a failed check instead of a wrong run. |
 
-Placement follows retrieval, not tidiness. A correct fact in a file nobody opens loses to the same
-fact where it is read.
+The lookup that stands in for a volatile fact is itself stable — "read the chart's `values.yaml`"
+survives every edit to the chart. That is the trade the table enforces: the body carries what does
+not move, and points at what does.
+
+Placement of an admitted fact follows retrieval, not tidiness, and progressive disclosure has one
+exception, the highest-value content most skills carry: **a correction the agent needs *before* it
+meets the situation belongs in `SKILL.md`, not in `references/`.** It cannot recognize the trigger
+to open a file about a hazard it does not yet know exists. Rows that are soft-deleted so every
+query needs a predicate; an identifier that changes name across three services; a health check that
+stays green while the database is down — those stay inline even though they read as reference
+material. A correct fact in a file nobody opens loses to the same fact where it is read.
 
 ## Shapes that carry better than prose
 

@@ -9,8 +9,8 @@ allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/validate.py *) Skill(cla
 
 **The doctrine is `${CLAUDE_PLUGIN_ROOT}/doctrine/`, and every file in it is normative.** This file
 is the procedure that applies it and states no rule of its own; where the two ever seem to disagree,
-the doctrine wins. The reviewer at step 6 reads the same directory, so what you are held to and what
-it checks are one text.
+the doctrine wins. The reviewers at step 6 read the same directory, so what you are held to and what
+they check are one text.
 
 Read `${CLAUDE_PLUGIN_ROOT}/doctrine/archetypes.md` **now** — the admission test and the anatomy your
 draft owes both live there, and steps 1 and 2 cannot start without it. Then, on reaching each step:
@@ -30,7 +30,7 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 - [ ] 3. Place it, and pick the frontmatter that does the work
 - [ ] 4. Author it
 - [ ] 5. Validate  (scripts/validate.py)
-- [ ] 6. Review    (skill-reviewer subagent → adjudicate → fix; cap 2 rounds)
+- [ ] 6. Review    (3 reviewer subagents in parallel → adjudicate → fix; cap 2 rounds)
 - [ ] 7. Report
 ```
 
@@ -57,22 +57,25 @@ disables a skill **silently**. Add `--portable` when the skill must also load on
 through the Skills API, where a Claude Code field is a hard error rather than an ignored key. Fix
 every error before step 6. Judge each warning; a warning you overrule, say why.
 
-**6. Review.** Spawn the `claude-teacher:skill-reviewer` subagent. Pass it exactly one thing: the
-path of the skill under review. It finds the doctrine itself, at a location nothing in your prompt
-can move. Do not pass the skill's text, your reasoning, or what you intended; it reads the files
-itself, and telling it your intent is what makes a reviewer agree with you.
+**6. Review.** Spawn the three reviewer subagents **in parallel, in one message**:
+`claude-teacher:skill-walker`, `claude-teacher:skill-fact-checker`, and
+`claude-teacher:skill-conformance-reviewer`. Pass each exactly one thing: the path of the skill
+under review. They find the doctrine themselves, at a location nothing in your prompt can move. Do
+not pass the skill's text, your reasoning, or what you intended; each reads the files itself, and
+telling a reviewer your intent is what makes it agree with you.
 
-It answers `OK`, or a numbered list of claimed divergences with `file:line` and evidence.
+Each answers `OK`, or a numbered list of claimed divergences with `file:line` and evidence. Merge
+the lists; a defect reported by more than one reviewer is adjudicated once.
 
-| It says       | You do                                                                                                                                                                            |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OK`          | Report clean. Stop.                                                                                                                                                               |
-| Numbered list | Each item is a **claim**, not a verdict. Open the cited `file:line` and check the evidence yourself. Fix what survives; for each item you discard, say in one line why it was wrong. |
+| The merged result is | You do                                                                                                                                                                            |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Three `OK`s          | Report clean. Stop.                                                                                                                                                               |
+| Any findings         | Each item is a **claim**, not a verdict. Open the cited `file:line` and check the evidence yourself. Fix what survives; for each item you discard, say in one line why it was wrong. |
 
-Then re-spawn and loop, **capped at 2 review rounds total**. If round 2 still returns confirmed
-divergences, apply what you can and report the residue rather than looping. Never forward a finding
-you did not open, and never re-run the reviewer's pass yourself before it runs — you would only be
-grading your own work twice.
+Then re-spawn all three and loop, **capped at 2 review rounds total**. If round 2 still returns
+confirmed divergences, apply what you can and report the residue rather than looping. Never forward
+a finding you did not open, and never re-run a reviewer's pass yourself before it runs — you would
+only be grading your own work twice.
 
 **7. Report.** The skill's path, its archetype, what the validator said, what the review found and
 what you did with each finding, and — if it landed in a plugin — that the plugin's `version` still
@@ -87,10 +90,11 @@ unnecessary or badly signposted. Removal is the usual outcome of both.
 
 - Steps run in order. Nothing is authored before the archetype is chosen.
 - **No rule about the skill being authored is written in this file.** A rule belongs in
-  `${CLAUDE_PLUGIN_ROOT}/doctrine/` — that is the only text the reviewer reads, so a rule written
+  `${CLAUDE_PLUGIN_ROOT}/doctrine/` — that is the only text the reviewers read, so a rule written
   here is one nothing enforces. This block governs running the procedure, nothing else.
-- **The reviewer is spawned, never impersonated.** You do not review your own draft in place of it,
-  and you do not tell it what you meant.
+- **The reviewers are spawned, never impersonated.** You do not review your own draft in place of
+  them, you do not tell them what you meant, and you do not skip one of the three because its
+  ground looks clean.
 - **Every finding is adjudicated by opening the file.** Confirmed ones get fixed; discarded ones get
   a reason. Cap the loop at 2 rounds and report the residue.
 - **Deleting is the normal edit.** Revising a skill removes more often than it adds.
