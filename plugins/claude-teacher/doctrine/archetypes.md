@@ -97,7 +97,10 @@ Required:
 - **Authentication**, only where it is not an ordinary login. An ordinary login needs no words. An
   interactive flow only a human can complete, a credential that must be injected out-of-band, or a
   token that must never be printed — those need words.
-- **A failure table, only for symptoms whose cause is not derivable from the error text.**
+- **A failure table, only for symptoms whose cause is not derivable from the error text.** A row
+  states the **cause** — the mechanism this skill knows and the reader does not. Where to go next is
+  the operator's judgement, made with context the table does not have, so a row ends at the cause and
+  never prescribes the remedy tool.
 
 | Cut — the message already says it | Keep — the message actively misleads |
 | :--- | :--- |
@@ -120,7 +123,10 @@ Required:
   condition where the job branches by situation rather than sequence. A technique set for one class
   of job is still a Procedure; what it may not be is a menu.
 - **The gate** — what must be true to proceed, and what stops the run. "Done" stated concretely
-  enough to be checked. A failed step halts and reports where; it does not continue degraded.
+  enough to be checked, and **satisfiable with the authority the skill itself declares**: a
+  completion condition resting on a step the `## Rules` block does not authorize, or on another
+  skill succeeding afterwards, is a procedure with no completion condition of its own. A failed step
+  halts and reports where; it does not continue degraded.
 - **A `## Rules` block** ending the body: the load-bearing invariants, the "never" list, and what
   the invocation does and does not authorize. Where the procedure runs stages the operator would
   otherwise approve one by one, say which of them the invocation authorizes and which it never does.

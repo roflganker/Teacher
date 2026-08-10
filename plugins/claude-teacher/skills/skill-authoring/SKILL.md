@@ -60,7 +60,7 @@ activity and an exclusive set of finding axes — none covers another's ground:
 | :--- | :--- | :--- |
 | `claude-teacher:skill-walker` | carries the skill's job end to end as a caller | `fitness` |
 | `claude-teacher:skill-fact-checker` | verifies every stated fact against something real, holds each to the fact-admission test | `grounding`, `volatility`, `ownership` |
-| `claude-teacher:skill-conformance-reviewer` | reads the skill as a text against the doctrine | `admission`, `anatomy`, `description`, `boundary`, `bundling`, `economy`, `form`, `ambiguity` |
+| `claude-teacher:skill-conformance-reviewer` | reads the skill as a text against the doctrine | `admission`, `anatomy`, `description`, `boundary`, `orchestration`, `bundling`, `economy`, `form`, `ambiguity` |
 
 Pass each exactly two things: the path of the skill under review, and the archetype chosen at
 step 2. Classification is the author's call and part of the record under review — no reviewer

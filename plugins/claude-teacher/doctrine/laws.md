@@ -106,11 +106,30 @@ Two clauses that are easy to miss:
   way cannot be found at all. A name in that position that is not a skill is either somebody's
   internal or a rename left behind, and both are broken today rather than eventually.
 
+**Name a sibling only for an inward dependency.** A skill owns one job; the session owns everything
+around it — what runs before, what runs after, what to do with the result, and whether to verify at
+all. So the test is deletion: **remove the sentence and ask whether the skill still carries its own
+job to the end.** If it does, the sentence was an assertion about the session's plan and stays
+deleted. "Send it — the `telegram` skill" is inward; "then verify it with X", "if that fails, check
+the logs with X", "for the related job, X" are the session's call however correctly X is written.
+
+The asymmetry that leaves is the correct one: a skill states **what it does not do** — the archetypes
+require it — but never **who does it instead**. "This does not verify against a live provider" is
+scope; "verify it with the `live-bot` skill" is orchestration in scope's clothes, deciding at
+authoring time for a session that may have verified already or hold no credentials. Describe the
+excluded content rather than pointing at a name; the name is the part that breaks when it is renamed.
+
+This holds wherever the skill speaks — prose, a failure table's remedy column, `allowed-tools`.
+
 Declare a hand-off you rely on in `allowed-tools`, **always namespaced** — `Skill(plugin:commit)`,
 never bare `Skill(commit)`. A bare name is a name, not an identity: a project or personal skill of
 the same name overrides the one you meant and inherits a grant never intended for it. The list
 doubles as the skill's dependency list, so a name there the body never routes to is a stale
 dependency.
+
+The rule runs both ways. A grant with no routed hand-off is stale; **a routed hand-off that is not an
+inward dependency is fixed by deleting the mention, never by adding the grant.** Read one-way, it
+converts a slip of prose into a permanent frontmatter coupling.
 
 A sentence cannot be namespaced — "the `commit` skill" means whichever `commit` the operator has
 installed. The grant is what fixes the identity, so every sibling the body routes to is declared,

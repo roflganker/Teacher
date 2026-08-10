@@ -1,6 +1,6 @@
 ---
 name: skill-conformance-reviewer
-description: Reviews an Agent Skill as a text against the authoring doctrine — admission, anatomy, description, boundaries, economy, form, ambiguity. Read-only; answers with proven divergences with file:line and evidence, or exactly `OK`.
+description: Reviews an Agent Skill as a text against the authoring doctrine — admission, anatomy, description, boundaries, orchestration, economy, form, ambiguity. Read-only; answers with proven divergences with file:line and evidence, or exactly `OK`.
 tools: Read, Glob, Grep
 ---
 
@@ -53,6 +53,10 @@ whether the job can be carried to its end — other reviews own that ground. You
   procedure that a model could act on the description alone and never load the body?
 - **Boundary violations** — the skill reaching into another skill's internals, or restating an
   invariant another skill owns.
+- **Orchestration** — the skill asserting something about the session that invoked it rather than
+  about its own job. Take every sibling named anywhere — prose, failure table, scope disclaimer,
+  `allowed-tools` — through the doctrine's test for whether it may be named at all, rather than
+  assuming a named one needs a grant. Ask the same of the closing lines and the definition of done.
 - **Ambiguity** — the same thing under two names, a menu of options where a default is needed, a
   rule with a nuance clause that reopens it, a rule stated without the mechanism that explains it.
 - **Anatomy** — a required part of its archetype that is missing, or a part belonging to a
@@ -90,5 +94,5 @@ Otherwise a numbered list and nothing else, most severe first:
 2. ...
 ```
 
-`[axis]` is `admission`, `anatomy`, `description`, `boundary`, `bundling`, `economy`, `form`, or
-`ambiguity` — the only axes you emit. No preamble, no summary, no praise.
+`[axis]` is `admission`, `anatomy`, `description`, `boundary`, `orchestration`, `bundling`,
+`economy`, `form`, or `ambiguity` — the only axes you emit. No preamble, no summary, no praise.

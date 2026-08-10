@@ -316,6 +316,21 @@ def check_body(body, body_start, skill_md, fm):
                                        "so running it prompts; grant the command exactly as the "
                                        "body invokes it, interpreter included" % script)
 
+    # `allowed-tools` doubles as the dependency list, so a granted skill the body never routes
+    # to is a coupling with nothing behind it -- it breaks when that skill is renamed or
+    # removed. The prose form is fixed, so the absence of a match is decidable here.
+    for skill_ref in set(re.findall(r"Skill\(([^)]*)\)", allowed_text)):
+        target = skill_ref.strip().split()[0] if skill_ref.strip() else ""
+        if not target or "*" in target:
+            continue
+        bare = target.split(":")[-1]
+        # The referral form is hard-wrapped as often as not, so match across the line break.
+        if not re.search(r"the\s+`%s`\s+skill" % re.escape(bare), scannable):
+            warn(skill_md, body_start, "`Skill(%s)` is granted but the body never names %s in the "
+                                       "fixed referral form; a grant with no hand-off behind it is "
+                                       "a dependency on a skill this one does not use -- delete "
+                                       "the grant, or the mention that led to it" % (target, bare))
+
 
 def check_bundle(skill_dir, skill_md):
     """Referenced-but-absent, present-but-orphaned, chain depth, and missing tables of contents."""
