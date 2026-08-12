@@ -7,22 +7,24 @@ tested, or deployed — there is no package manager, no test runner, no CI. The 
 files that a Claude Code runtime loads: skills, agents, and the doctrine they read.
 
 The plugin's subject is **harness development** — teaching Claude to author the pieces a harness is
-made of. Skill authoring is the first of them and the only one currently complete; rule authoring is
-a declared stub, and other components follow later. When adding a component, add it as its own
-skill with its own doctrine, not as a section inside skill authoring.
+made of. Skill authoring and rule authoring are complete; other components follow later. When
+adding a component, add it as its own skill with its own doctrine, not as a section inside skill
+authoring.
 
 ```
 .claude-plugin/marketplace.json          marketplace "claude-teacher"
 plugins/claude-teacher/
   .claude-plugin/plugin.json             plugin manifest — holds `version`
   doctrine/                              the normative text; the plugin's shared core
-    laws.md  archetypes.md  frontmatter.md  body.md  scripts.md
-  skills/skill-authoring/SKILL.md        the procedure that applies the doctrine
+    laws.md  archetypes.md  frontmatter.md  body.md  scripts.md   skill doctrine
+    rules.md                             rule doctrine — .claude/rules/ files
+  skills/skill-authoring/SKILL.md        the procedure that applies the skill doctrine
   skills/skill-authoring/scripts/validate.py   mechanical checks
-  skills/rule-authoring/SKILL.md         stub — says so, and says what not to assume
+  skills/rule-authoring/SKILL.md         the procedure that applies the rule doctrine
   agents/skill-walker.md                 read-only reviewer: walks the skill as a caller (fitness)
   agents/skill-fact-checker.md           read-only reviewer: verifies facts (grounding, volatility, ownership)
   agents/skill-conformance-reviewer.md   read-only reviewer: reads the text against the doctrine
+  agents/rule-reviewer.md                read-only reviewer: facts + conformance for rule files
 knowledge/                               gitignored source material; not shipped
 ```
 
