@@ -74,8 +74,9 @@ In practice, for our own files:
   the doctrine behind them is free to change.
 - **Modularity** — one responsibility each. If a change wants to give `skill-authoring` a second
   job, it is a second skill.
-- **Reusability** — components refer to each other by name and outcome (`` the `rule-authoring`
-  skill ``, declared as `Skill(claude-teacher:rule-authoring)` in `allowed-tools`), never by path.
+- **Reusability** — components refer to each other by name and outcome (`` the `skill-authoring`
+  skill ``, with the matching `Skill(...)` grant where the hand-off is an inward dependency),
+  never by path.
 
 ## Working in this repository
 

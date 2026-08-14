@@ -2,7 +2,7 @@
 name: skill-authoring
 description: Authors and revises Agent Skills — SKILL.md, its frontmatter, its bundled files, and where it installs. Use when creating a skill, editing one, or judging whether one is well built.
 argument-hint: [skill-name-or-path]
-allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/validate.py *) Skill(claude-teacher:rule-authoring)
+allowed-tools: Bash(python3 ${CLAUDE_SKILL_DIR}/scripts/validate.py *)
 ---
 
 # Authoring an Agent Skill
@@ -21,7 +21,7 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 | step 3 | `${CLAUDE_PLUGIN_ROOT}/doctrine/frontmatter.md`, the rest | the fields, and what the runtime enforces for you |
 | step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/laws.md` | the laws every line of the draft answers to |
 | step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/body.md` | how each part of the body is shaped |
-| step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/scripts.md` | only if it bundles a script |
+| step 4 | `${CLAUDE_PLUGIN_ROOT}/doctrine/scripts.md` | the moment bundling a script comes up — whether to bundle is itself decided against this file, so it is read before that decision, not after it |
 
 **Every step is a gate.** A failed step stops the run; say where and why.
 
@@ -39,8 +39,8 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 
 **1. Admit it.** Declare where the skill will install — personal, project, or plugin — then run the
 admission test in `doctrine/archetypes.md` against that placement's surfaces. A skill that fails it:
-say what fails and stop. If the operator wants it anyway, that is their call: build it. Where the
-rejection table routes the content to `.claude/rules/`, hand it to the `rule-authoring` skill.
+say what fails and stop. If the operator wants it anyway, that is their call: build it. The
+rejection table says where rejected content belongs; what to do with it is the session's call.
 
 **2. Classify.** Pick the archetype per `doctrine/archetypes.md` and take its required anatomy.
 

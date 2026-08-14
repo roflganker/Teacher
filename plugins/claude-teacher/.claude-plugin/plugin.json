@@ -1,6 +1,6 @@
 {
   "name": "claude-teacher",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "description": "Teaches Claude to author Agent Skills and rule files, and reviews them against that doctrine.",
   "author": {
     "name": "roflganker"
