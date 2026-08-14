@@ -19,7 +19,7 @@ that table has spoken.
 - [ ] 1. Admit it — is this content a rule at all?
 - [ ] 2. Scope it — one concept, its file, its level, its globs
 - [ ] 3. Author it
-- [ ] 4. Review    (rule-reviewer subagent → adjudicate → fix; cap 2 rounds)
+- [ ] 4. Review    (rule-reviewer subagent → adjudicate → fix; cap 5 rounds)
 - [ ] 5. Report
 ```
 
@@ -46,7 +46,7 @@ you.
 It answers `OK`, or a numbered list of claimed divergences with `file:line` and evidence. Each
 item is a **claim**, not a verdict: open the cited line, check the evidence, fix what survives,
 and for each item you discard say in one line why it was wrong. Then re-spawn and loop, **capped
-at 2 review rounds total**. If round 2 still returns confirmed divergences, apply what you can
+at 5 review rounds total**. If round 5 still returns confirmed divergences, apply what you can
 and report the residue rather than looping.
 
 **5. Report.** The rule's path and level, its globs or the case made for always-on, what the

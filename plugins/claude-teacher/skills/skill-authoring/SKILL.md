@@ -31,7 +31,7 @@ draft owes both live there, and steps 1 and 2 cannot start without it. Then, on 
 - [ ] 3. Configure — pick the frontmatter that does the work
 - [ ] 4. Author it
 - [ ] 5. Validate  (scripts/validate.py)
-- [ ] 6. Review    (3 reviewer subagents in parallel → adjudicate → fix; cap 2 rounds)
+- [ ] 6. Review    (3 reviewer subagents in parallel → adjudicate → fix; cap 5 rounds)
 - [ ] 7. Report
 ```
 
@@ -76,7 +76,7 @@ the lists; a defect reported by more than one reviewer is adjudicated once.
 | Three `OK`s          | Report clean. Stop.                                                                                                                                                               |
 | Any findings         | Each item is a **claim**, not a verdict. Open the cited `file:line` and check the evidence yourself. Fix what survives; for each item you discard, say in one line why it was wrong. |
 
-Then re-spawn all three and loop, **capped at 2 review rounds total**. If round 2 still returns
+Then re-spawn all three and loop, **capped at 5 review rounds total**. If round 5 still returns
 confirmed divergences, apply what you can and report the residue rather than looping. Never forward
 a finding you did not open, and never re-run a reviewer's pass yourself before it runs — you would
 only be grading your own work twice.
@@ -103,7 +103,7 @@ the skill's directory is written.
   them, you do not tell them what you meant, and you do not skip one of the three because its
   ground looks clean.
 - **Every finding is adjudicated by opening the file.** Confirmed ones get fixed; discarded ones get
-  a reason. Cap the loop at 2 rounds and report the residue.
+  a reason. Cap the loop at 5 rounds and report the residue.
 - **Deleting is the normal edit.** Revising a skill removes more often than it adds.
 - Invoking this skill authorizes writing the skill's files and running its validator. It does not
   authorize committing, publishing, or bumping a plugin version.
