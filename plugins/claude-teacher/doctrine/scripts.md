@@ -192,3 +192,10 @@ Nor should the body describe how the script behaves. The two drift, and the body
 saying the script falls back to a default when a flag is omitted survives long after the script
 started refusing outright, and the agent believes the sentence. State what the skill is for; let
 the script state what the script does.
+
+The line between this rule and *A wrapper hands the primitive back* is interface versus mechanism.
+That both paths exist and when each is right is the wrapper's **interface** — the caller cannot use
+a path it was never told about, so the body must say it. How the script conducts either path — what
+it preconfigures, checks, retries, or falls back to along the way — is **mechanism**, and that is
+what this rule keeps out. A sentence that survives the script being rewritten with the same
+interface is on the right side of the line; one that would become false is on the wrong side.
