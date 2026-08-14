@@ -291,12 +291,22 @@ def check_frontmatter(fm, skill_dir, skill_md, portable):
     allowed = fm.get("allowed-tools")
     if allowed is not None:
         text = " ".join(allowed) if isinstance(allowed, list) else str(allowed)
+        # A project or personal skill has no namespace -- the runtime lists it bare -- so a bare
+        # grant from a .claude/skills/ placement to a sibling that exists there is the only
+        # identity the target has, and is not a finding.
+        parent = os.path.dirname(os.path.abspath(skill_dir))
+        dotclaude_placed = (os.path.basename(parent) == "skills"
+                            and os.path.basename(os.path.dirname(parent)) == ".claude")
         for skill_ref in re.findall(r"Skill\(([^)]*)\)", text):
             target = skill_ref.strip().split()[0] if skill_ref.strip() else ""
             if target and ":" not in target:
-                warn(skill_md, 2, "`Skill(%s)` is not namespaced -- a bare name is a name, not an "
-                                  "identity, so a project or personal skill of the same name "
-                                  "inherits a grant never meant for it" % target)
+                if dotclaude_placed and os.path.isfile(os.path.join(parent, target, "SKILL.md")):
+                    continue
+                warn(skill_md, 2, "`Skill(%s)` is bare and is not a .claude/skills/ sibling of "
+                                  "this skill -- a bare name is a name, not an identity, so a "
+                                  "project or personal skill of the same name inherits a grant "
+                                  "never meant for it; only a project or personal target, which "
+                                  "has no namespace, is granted bare" % target)
     return fm
 
 

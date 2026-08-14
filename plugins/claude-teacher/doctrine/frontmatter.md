@@ -20,7 +20,8 @@ beats a paragraph requesting the same behaviour.
 
 Precedence on a name collision is enterprise, then personal, then project; any of them overrides a
 bundled skill of the same name. Plugin skills are namespaced `plugin-name:skill-name` and cannot
-collide — which is also why a cross-skill grant must be written namespaced.
+collide — which is also why a grant to a plugin skill must be written namespaced, while a project
+or personal target, listed bare by the runtime, can only be granted bare.
 
 Placement is not an install-time detail — it is declared before admission, because it fixes the two
 surfaces every later decision is judged against: **which siblings surround the skill**, whose owned

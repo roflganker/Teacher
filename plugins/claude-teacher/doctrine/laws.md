@@ -121,11 +121,14 @@ excluded content rather than pointing at a name; the name is the part that break
 
 This holds wherever the skill speaks — prose, a failure table's remedy column, `allowed-tools`.
 
-Declare a hand-off you rely on in `allowed-tools`, **always namespaced** — `Skill(plugin:commit)`,
-never bare `Skill(commit)`. A bare name is a name, not an identity: a project or personal skill of
-the same name overrides the one you meant and inherits a grant never intended for it. The list
-doubles as the skill's dependency list, so a name there the body never routes to is a stale
-dependency.
+Declare a hand-off you rely on in `allowed-tools`, **namespaced wherever a namespace exists**. A
+plugin-placed target is granted `Skill(plugin:commit)`, never bare `Skill(commit)`: a bare name is
+a name, not an identity — a project or personal skill of the same name overrides the one you meant
+and inherits a grant never intended for it. A project or personal skill has no namespace — the
+runtime lists it bare — so a grant to such a sibling is written bare, `Skill(commit)`; that is the
+only identity the target has, and the shadowing a higher-precedence skill of the same name could
+still do is the placement's exposure, not a defect the grant can fix. The list doubles as the
+skill's dependency list, so a name there the body never routes to is a stale dependency.
 
 The rule runs both ways. A grant with no routed hand-off is stale; **a routed hand-off that is not an
 inward dependency is fixed by deleting the mention, never by adding the grant.** Read one-way, it
