@@ -171,9 +171,11 @@ Prefer stateless. `kubectl config use-context` is the shape to avoid: it mutates
 concurrent session reads, so two agents working at once silently fight over which cluster the next
 command reaches. Pass the target per call instead.
 
-Where state is genuinely needed, isolate it per session under
-`/tmp/<skill>/${CLAUDE_SESSION_ID}/`. The script cannot discover the session id; the body passes
-it in.
+Where state is genuinely needed, isolate it per session: the harness exports
+`CLAUDE_CODE_SESSION_ID` into every Bash call, so the script reads it from its own environment and
+keys the state directory on it — `/tmp/<skill>/$CLAUDE_CODE_SESSION_ID/`, exiting with a clear
+error if it is unset. It is not one of the three template variables (`frontmatter.md`, path
+substitution), so the body has nothing to pass in and never writes it.
 
 ## What the body must not say about the script
 
