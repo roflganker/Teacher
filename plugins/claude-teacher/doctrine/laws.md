@@ -27,18 +27,31 @@ Where a rule below seems arbitrary, it is one of these four made concrete.
 ### Assume the frontier
 
 The test for every line is: **would a competent agent get this wrong without it?** If no, cut it.
-This retires whole classes of content that skills habitually carry:
+The test is need, not derivability. A line fails it two ways: the agent already has what it says,
+or nothing the agent does turns on it — and the second is the one that survives review, because
+such a line is true, specific, and impossible to derive, and reads as exactly the content a skill
+is for. A token's lifetime, a lock's expiry in seconds, a rate limit per route, how the relay
+behind the endpoint works: unless a step branches on the value or the mechanism, the agent acts
+identically with the line and without it, and a line that changes nothing it does is a tour of
+the domain. So ask both halves of every line: could it derive this, and would it act differently
+without it. This retires whole classes of content that skills habitually carry:
 
-| Cut — the agent already has it                       | Keep — it cannot be derived                                             |
+| Cut — the agent already has it, or nothing turns on it | Keep — it cannot be derived, and a step turns on it                     |
 | ------------------------------------------------------ | ------------------------------------------------------------------------- |
 | What the format is, why the tool exists, what a 404 means | That this service answers `404` for a route that exists but is not deployed |
 | "If the CLI is not installed, install it"             | That an HTML body instead of a JSON error means a proxy answered, not the app |
 | Restating what a linter, compiler, or type checker rejects | The paired rule no tool enforces, where moving one half silently breaks the other |
 | Standard language and framework convention            | The one place this project deliberately violates it, and why                |
+| A true number no step branches on — a TTL, a lock expiry, a rate limit | The ceiling a step must stay under, and what happens past it          |
+| How the system works behind the interface being driven | The one place the interface answers as if it worked and did not             |
 
 The mirror failure is real and costs more: **over-trimming**. Cutting the *reason* leaves a bare
-imperative that stops generalizing the moment the situation shifts. Cut duplication and derivable
-facts; never cut the mechanism that explains a rule.
+imperative that stops generalizing the moment the situation shifts. Cut duplication, derivable
+facts, and facts nothing turns on; never cut the mechanism that explains a rule the skill states.
+The distinction is what the mechanism is attached to: a reason the agent needs in order to hold a
+rule in the case the author never anticipated stays, and a mechanism attached to no rule — how
+the outbox relay works, why deploy images cannot be matched to a commit — is not a reason but the
+tour again.
 
 ### The description is a routing key, not a summary
 
@@ -101,10 +114,14 @@ Two clauses that are easy to miss:
   or a project-scoped entry point like `npm run test`, is ordinary use of the environment. Reaching
   into a sibling's directory — `<this-skill>/../database/scripts/psql.bash` — is the violation,
   and no skill ever runs another skill's script.
-- **Name a sibling in the fixed form** — `` the `kubernetes` skill ``. This is grammar, not style:
-  a reference written that way can be checked against the installed set, and one written any other
+- **Name a sibling in the fixed form** — `` the `kubernetes` skill ``, `` the `ime-shared:kubernetes` skill `` —
+  with the name written exactly as the runtime lists it: namespaced wherever a namespace exists,
+  bare only for a project or personal target, which has no other. This is grammar, not style: a
+  reference written that way can be checked against the installed set, and one written any other
   way cannot be found at all. A name in that position that is not a skill is either somebody's
-  internal or a rename left behind, and both are broken today rather than eventually.
+  internal or a rename left behind, and both are broken today rather than eventually. And the
+  namespace is part of the name, not decoration: a body that writes `kubernetes` for a dependency
+  on `ime-shared:kubernetes` has recorded a different dependency than it has.
 
 **Name a sibling only for an inward dependency.** A skill owns one job; the session owns everything
 around it — what runs before, what runs after, what to do with the result, and whether to verify at
@@ -114,10 +131,20 @@ deleted. "Send it — the `telegram` skill" is inward; "then verify it with X", 
 the logs with X", "for the related job, X" are the session's call however correctly X is written.
 
 The asymmetry that leaves is the correct one: a skill states **what it does not do** — the archetypes
-require it — but never **who does it instead**. "This does not verify against a live provider" is
-scope; "verify it with the `live-bot` skill" is orchestration in scope's clothes, deciding at
-authoring time for a session that may have verified already or hold no credentials. Describe the
-excluded content rather than pointing at a name; the name is the part that breaks when it is renamed.
+require it — but never **who does it instead, or when**. "This does not verify against a live
+provider" is scope; "verify it with the `live-bot` skill" is orchestration in scope's clothes,
+deciding at authoring time for a session that may have verified already or hold no credentials.
+Describe the excluded content rather than pointing at a name; the name is the part that breaks
+when it is renamed.
+
+The same test catches a sentence that names no sibling at all. "Promoting to production is the
+operator's own act, taken after reading the report" names nobody's skill and still fails deletion:
+remove it and the skill carries its job to the end unchanged, so it was an assertion about what
+the session does once the job is over — and a session invoked with "then ship it to production"
+now holds a skill that has ruled on its next step. What stays is the scope the sentence was
+dressed as: "this invocation does not authorize a production deploy" says what the skill will not
+do, and nothing about whether it happens, who does it, or when. A restriction on the operator's
+own later act is orchestration whoever it forbids.
 
 This holds wherever the skill speaks — prose, a failure table's remedy column, `allowed-tools`.
 
@@ -134,9 +161,13 @@ The rule runs both ways. A grant with no routed hand-off is stale; **a routed ha
 inward dependency is fixed by deleting the mention, never by adding the grant.** Read one-way, it
 converts a slip of prose into a permanent frontmatter coupling.
 
-A sentence cannot be namespaced — "the `commit` skill" means whichever `commit` the operator has
-installed. The grant is what fixes the identity, so every sibling the body routes to is declared,
-and the pair is read together: the sentence says what is wanted, the grant says which skill.
+The sentence and the grant name one identity, in one form: `` the `plugin:commit` skill `` in the
+body, `Skill(plugin:commit)` in `allowed-tools`, and bare in both only for a target that has no
+namespace. The grant does not fix the identity for the sentence — it pre-approves the hand-off
+and never restricts (`frontmatter.md`, traps), so where a bare `commit` and a `plugin:commit`
+are both installed, a body that writes `commit` resolves by the runtime's precedence whatever the
+grant says. The identity therefore has to be in the sentence itself, and the two are read
+together: the sentence says what is wanted and of whom, the grant lets the hand-off run.
 
 ### Leave nothing to interpret
 

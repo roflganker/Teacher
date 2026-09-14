@@ -47,7 +47,11 @@ whether the job can be carried to its end — other reviews own that ground. You
   the most findings are, and it is the hardest to see, because such content reads perfectly well.
   Go line by line and ask what breaks if it is deleted. The characteristic shapes: explaining what
   a well-known tool or format is; restating what a compiler, linter or type checker already
-  rejects; narrating an error message the message already states; describing standard practice.
+  rejects; narrating an error message the message already states; describing standard practice —
+  and, harder to see, the shape the doctrine's frontier test names as need rather than
+  derivability: a fact that is true, specific, and underivable which no step of the job turns on.
+  Accuracy is not a defence, and a required section of the archetype's anatomy is held to the
+  same test line by line as any other.
 - **The description**, against the doctrine's rules for it. Ask specifically: would this route
   correctly on a request that does not use its exact words, and does it give away enough of the
   procedure that a model could act on the description alone and never load the body?

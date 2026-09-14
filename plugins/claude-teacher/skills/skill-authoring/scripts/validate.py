@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Mechanically validate an Agent Skill directory.
 
-Checks only what inspection misses or gets wrong: frontmatter that fails to parse (which
-disables a skill silently, with no error at the point of use), field combinations that cancel
+Checks only what inspection misses or gets wrong: frontmatter that fails to parse (the skill
+still loads, with every field silently dropped), field combinations that cancel
 each other out, references to bundled files that are not there, and bundled files nothing
 points at.
 
@@ -13,6 +13,9 @@ here. They belong to the reviewer.
 
 --portable restricts frontmatter to the six fields claude.ai uploads and the Skills API
 accept; every other key is a hard error on those paths rather than a warning.
+
+Standard library only. PyYAML is used for the frontmatter parse when it is installed; without
+it a built-in subset parser runs instead, and a NOTE on stderr says so.
 
 Exit status: 0 clean or warnings only, 1 any ERROR, 2 bad usage.
 """
@@ -81,12 +84,20 @@ def parse_frontmatter(fm_text, path):
     try:
         import yaml
     except ImportError:
+        # Say which parser ran: the two accept different inputs, and a clean result from the
+        # subset parser is a weaker claim than one from a real YAML parse.
+        sys.stderr.write("NOTE  PyYAML is not installed; frontmatter was parsed with the built-in "
+                         "subset parser, which reads top-level `key: value` lines and skips "
+                         "nested structures.\n")
         return subset
     try:
         data = yaml.safe_load(fm_text)
     except Exception as exc:  # noqa: BLE001 -- any parse failure is the same defect
         first = str(exc).strip().split("\n")[0]
-        error(path, 2, "frontmatter is not valid YAML, so the skill loads as nothing: %s" % first)
+        error(path, 2, "frontmatter is not valid YAML, so the skill loads with every field "
+                       "dropped -- name falls back to the directory, description to the body's "
+                       "first line, and allowed-tools, model, and disable-model-invocation "
+                       "silently stop applying: %s" % first)
         return subset if isinstance(subset, dict) else {}
     if data is None:
         error(path, 2, "frontmatter is empty")
@@ -221,8 +232,8 @@ def check_frontmatter(fm, skill_dir, skill_md, portable):
     name = fm.get("name")
     dirname = os.path.basename(os.path.abspath(skill_dir))
     if name is None:
-        warn(skill_md, 2, "no `name` -- it defaults to the directory name, which is fragile for a "
-                          "plugin installed from a marketplace, where that name is a version string")
+        warn(skill_md, 2, "no `name` -- it defaults to the directory name, so a directory rename "
+                          "silently renames the skill and breaks every grant and referral to it")
     else:
         name = str(name)
         if name != dirname:
@@ -328,18 +339,26 @@ def check_body(body, body_start, skill_md, fm):
 
     # `allowed-tools` doubles as the dependency list, so a granted skill the body never routes
     # to is a coupling with nothing behind it -- it breaks when that skill is renamed or
-    # removed. The prose form is fixed, so the absence of a match is decidable here.
+    # removed. The prose form is fixed and names the target exactly as the grant does, namespace
+    # included, so the absence of a match is decidable here.
     for skill_ref in set(re.findall(r"Skill\(([^)]*)\)", allowed_text)):
         target = skill_ref.strip().split()[0] if skill_ref.strip() else ""
         if not target or "*" in target:
             continue
-        bare = target.split(":")[-1]
         # The referral form is hard-wrapped as often as not, so match across the line break.
-        if not re.search(r"the\s+`%s`\s+skill" % re.escape(bare), scannable):
-            warn(skill_md, body_start, "`Skill(%s)` is granted but the body never names %s in the "
-                                       "fixed referral form; a grant with no hand-off behind it is "
-                                       "a dependency on a skill this one does not use -- delete "
-                                       "the grant, or the mention that led to it" % (target, bare))
+        if re.search(r"the\s+`%s`\s+skill" % re.escape(target), scannable):
+            continue
+        bare = target.split(":")[-1]
+        if ":" in target and re.search(r"the\s+`%s`\s+skill" % re.escape(bare), scannable):
+            warn(skill_md, body_start, "`Skill(%s)` is granted but the body names the sibling bare, "
+                                       "as `%s`; the namespace is part of the name, and a bare "
+                                       "`%s` resolves by the runtime's precedence whatever the "
+                                       "grant says -- write it as the grant does" % (target, bare, bare))
+            continue
+        warn(skill_md, body_start, "`Skill(%s)` is granted but the body never names %s in the "
+                                   "fixed referral form; a grant with no hand-off behind it is "
+                                   "a dependency on a skill this one does not use -- delete "
+                                   "the grant, or the mention that led to it" % (target, target))
 
 
 def check_bundle(skill_dir, skill_md):

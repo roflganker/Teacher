@@ -130,6 +130,9 @@ Required:
 - **A `## Rules` block** ending the body: the load-bearing invariants, the "never" list, and what
   the invocation does and does not authorize. Where the procedure runs stages the operator would
   otherwise approve one by one, say which of them the invocation authorizes and which it never does.
+  "Does not authorize" is the whole of it: the block says what this invocation will not do, never
+  what may not happen once the job is over or who does it then — that is the session's, and
+  `laws.md` states the test under the public-surface law.
 - **What it does not handle.** A happy-path procedure should say it is the happy path, so a caller
   wrapping it in a retry loop knows the failure handling is theirs.
 

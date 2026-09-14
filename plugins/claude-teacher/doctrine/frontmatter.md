@@ -152,8 +152,10 @@ variable's existence.
 
 ## Traps
 
-- **Frontmatter that does not parse disables the skill silently.** There is no error at the point of
-  use — it simply never fires. A colon-space inside an unquoted value is the usual cause: write
+- **Frontmatter that does not parse loads the skill with every field dropped, silently.** The name
+  falls back to the directory, the description to the body's first line — so it is matched against
+  arbitrary prose — and `allowed-tools`, `model`, and `disable-model-invocation` stop applying, with
+  no error at the point of use. A colon-space inside an unquoted value is the usual cause: write
   `description: Ships the change: staging first` and the parser sees a mapping. Quote it, or use a
   `>` block. Run the validator rather than trusting inspection.
 - **`allowed-tools` grants, it never restricts.** Tools absent from the list still follow normal
